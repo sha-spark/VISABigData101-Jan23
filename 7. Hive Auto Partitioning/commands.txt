@@ -1,0 +1,17 @@
+create table foodbase (orderdate string, region string, city string, category string, product string, quantity int, unitprice double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+alter table foodbase set tblproperties ("skip.header.line.count"="1");
+
+load data inpath'/user/maria_dev/data/sampledatafoodsales.csv' into table foodbase;
+
+create table food1 (orderdate string, city string, category string, product string, quantity int, unitprice double, total double) partitioned by (region string) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+insert into table food1 partition(region) select orderdate, city, category, product, quantity, unitprice, total, region from foodbase;
+
+show partitions food1;
+
+select count(*) from food1;
+
+select count(*) from food1 where region=’East’;
+
+select count(*) from food1 where region=’West’;
