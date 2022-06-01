@@ -1,0 +1,42 @@
+
+// Creating a database
+
+show databases:
+
+create database food;
+
+describe database food;
+
+drop database food;
+
+// Creating an Internal Table
+
+show tables;
+
+create table foodbase(orderdate string,region string,city string, category string, product string, quantity int, unitprice double, total double) row format delimited fields terminated by ',' 	lines terminated by '\n' stored as textfile;
+
+ alter table foodbase SET TBLPROPERTIES ("skip.header.line.count"="1");
+
+ load data inpath'/user/maria_dev/lab1/sampledatafoodsales.csv' into table foodbase;
+
+ describe extended foodbase;
+
+ select * from foodbase limit 20;
+
+ // Dropping the Table
+
+ drop table foodbase;
+
+ show tables;
+
+ // Creating an External Table
+
+ create external table foodbase(orderdate string,region string, city string, category string, product string, quantity int, unitprice double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile location’/user/maria_dev/data/foods’;
+
+ load data inpath'/user/maria_dev/lab1/sampledatafoodsales.csv' into table foodbase;
+
+ // End lab1
+
+ use default;
+
+ drop database food;
