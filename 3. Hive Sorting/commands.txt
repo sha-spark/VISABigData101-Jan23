@@ -1,0 +1,29 @@
+// Creating the Table 
+
+create table sales3(orderdate string, region string, rep string, item string, units int, unitcost double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+load data inpath'/user/maria_dev/lab3/sales.csv' into table sales3;
+
+// Order by
+
+select * from sales3 order by units;
+
+// Sort by
+
+select * from sales3 sort by units;
+
+select * from sales3 sort by rep;
+
+// Distribute by
+
+select item, units from sales3;
+
+select item, units from sales3 distribute by item;
+
+select item, units from sales3 distribute by units;
+
+// Cluster by
+
+select * from sales3 cluster by units;
+
+select * from sales3 cluster by rep;
