@@ -59,3 +59,5 @@ create table inventory(product string, amount int,  price double, total double) 
 insert into table inventory select item, units, unitcost, total from sales1;
 
 alter table inventory replace columns(product string, amount int, price double);
+
+alter table inventory add columns(total double, rep string);
