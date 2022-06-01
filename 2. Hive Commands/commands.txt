@@ -1,0 +1,61 @@
+ // Creating the First Table
+
+ create table sales1(orderdate string, region string, rep string, item string, units int, unitcost double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile; 
+
+ alter table sales1 SET TBLPROPERTIES("skip.header.line.count"="1");
+
+ set hive.cli.print.header=true;
+
+ load data inpath'/user/maria_dev/lab2/sales.csv' into table sales1;
+		
+ select * from sales1 limit 20
+
+ // Table Insert Selected Columns
+
+ create table inventory(product string, amount int, price double) stored as textfile;
+
+ insert into table inventory select item, units, unitcost from sales1;
+
+ select * from inventory;
+
+ describe formatted inventory;
+
+ insert overwrite table inventory select item, units, unitcost from sales1;
+
+//Table Insert Selected Rows
+
+insert overwrite table inventory select item, units, unitcost from sales1 where item = 'Pen';
+
+create table pencils(product string, amount int, price double) stored as textfile;
+
+create table binders(product string, amount int) stored as textfile;
+
+from sales1 insert into pencils select item, units, unitcost  where item = 'Pencil'  insert into binders select item, units, unitcost where item = 'Binder';
+
+insert overwrite table inventory select item, units, unitcost from sales1 where item = 'Pen' or item = 'Pencil';
+
+// Altering Table Schema
+
+insert overwrite table inventory select item, units, unitcost,total from sales1;
+
+insert overwrite table inventory select item, units from sales1;
+
+insert overwrite table inventory select unitcost, unitcost, unitcost from sales1;
+           
+insert overwrite table inventory select units, units, units from sales1;
+
+insert overwrite table inventory select item, item, item from sales1;
+
+alter table inventory add columns(total double);
+
+insert overwrite table inventory select item, units, unitcost,total from sales1;
+
+alter table inventory replace columns(product string, amount int, price double);
+
+ drop table inventory;
+                
+create table inventory(product string, amount int,  price double, total double) stored as textfile;
+           
+insert into table inventory select item, units, unitcost, total from sales1;
+
+alter table inventory replace columns(product string, amount int, price double);
