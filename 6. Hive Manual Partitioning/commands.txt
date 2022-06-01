@@ -1,0 +1,10 @@
+create external table trans_p (id int, account_id int, vendor_id int, tstamp string, city string, state string, amount double) partitioned by (dt string) row format delimited fields terminated by ','	stored as textfile location '/user/maria_dev/data/in-part';
+
+load data inpath'/user/maria_dev/staging_area/transaction-2015-01-01.csv' into table trans_p partition (dt='2015-01-01');
+load data inpath'/user/maria_dev/staging_area/transaction-2015-01-02.csv' into table trans_p partition (dt='2015-01-02');
+
+show partitions trans_p;
+
+select count(*) from trans_p where dt='2015-01-01';
+select count(*) from trans_p where dt='2015-01-01';
+select count(*) from trans_p;
