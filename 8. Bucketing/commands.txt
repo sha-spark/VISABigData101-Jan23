@@ -1,0 +1,36 @@
+// Create Bucket table
+
+
+create table foodbase (orderdate string, region string, city string, category string, product string, quantity int, unitprice double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+alter table foodbase SET TBLPROPERTIES ("skip.header.line.count"="1");
+
+load data inpath'/user/maria_dev/data/sampledatafoodsales.csv' into table foodbase;
+
+create table food2 (orderdate string, region string, city string, category string, product string, quantity int, unitprice double, total double) clustered by (city) into 3 buckets row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+insert into table food2 select * from foodbase;
+
+describe formatted food2;
+
+// Second bucket table on category
+
+create table food3 (orderdate string, region string, city string, category string, product string, quantity int, unitprice double, total double) clustered by (category) into 2 buckets row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+insert into table food3 select * from foodbase;
+
+describe formatted food3;
+
+// Third bucket on quantity
+
+create table food4 (orderdate string, region string, city string, category string, product string, quantity int, unitprice double, total double) clustered by (quantity) into 3 buckets row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+insert into table food4 select * from foodbase;
+
+describe formatted food4;
+
+// Partition and Bucket
+
+create table food5 (orderdate string, city string, category string, product string, quantity int, unitprice double, total double) partitioned by (region string) clustered by (quantity) into 4 buckets row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+insert into table food5 partition(region) select orderdate, city, category, product, quantity, unitprice, total, region from foodbase;
