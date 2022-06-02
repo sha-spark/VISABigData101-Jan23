@@ -1,0 +1,49 @@
+// Create the table
+
+create table sales4(orderdate string, region string, rep string, item string, units int, unitcost double, total double) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile; 
+  
+alter table sales4 set tblproperties("skip.header.line.count"="1");
+ 
+ load data inpath'/user/maria_dev/data/SampleData.csv' into table sales4;
+
+// Date Functions
+
+select year(orderdate) from sales4;
+
+select distinct year(orderdate) from sales4;
+
+select count(distinct year(orderdate)) from sales4;
+
+select * from sales4 where month(orderdate) = '5';
+
+select * from sales4 where month(orderdate) = '3' and year(orderdate) = '2022';
+
+// Substring Functions
+
+create table grads(major_code string, major string, total int, men int, women int)  row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+alter table grads set tblproperties("skip.header.line.count"="1");
+
+ load data inpath'/user/maria_dev/data/RecentGrads.csv' into table grads;
+
+ select distinct major from grads where instr(major, 'ENGINEERING') > 0;
+
+select distinct major from grads where instr(lower(major), 'engineering') > 0;
+
+select length(major), translate(reverse(major),'E','X') from grads;
+
+// Regular Expressions
+
+select * from sales4;
+
+select distinct rep from sales4;
+
+select distinct rep from sales4 where lower(rep) rlike 'a';
+
+select distinct rep from sales4 where lower(rep) rlike '^a';
+
+select distinct rep from sales4 where lower(rep) rlike 'n$';
+
+select distinct rep from sales4 where lower(rep) rlike 'a.+r';
+
+select distinct rep from sales4 where lower(rep) rlike 'a.*r';
