@@ -27,3 +27,13 @@ select item, units from sales3 distribute by units;
 select * from sales3 cluster by units;
 
 select * from sales3 cluster by rep;
+
+// Group by
+
+select count(*) from sales3;
+
+select sum(total), avg(total) from sales3;
+
+select region, sum(total), avg(total), count(*) from sales3 group by region;
+
+select item, sum(total), avg(total), count(*) from sales3 group by item;
