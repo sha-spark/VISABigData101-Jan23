@@ -1,0 +1,60 @@
+// Create Tables
+
+create table s1(orderdate string, region string, rep string, item string, units int, unitcost double, total double) row format delimited fields terminated by ','  lines terminated by '\n' stored as textfile;
+
+create table s2(orderdate string, region string, rep string, item string, units int, unitcost double, total double) row format delimited fields terminated by ','  lines terminated by '\n' stored as textfile;
+
+alter table s1 set tblproperties("skip.header.line.count"="1");
+
+load data inpath'/user/maria_dev/data/SampleData.csv' into table s1;
+
+
+select * from s1;
+
+select * from s2; 
+
+// Create view
+
+create view v as select * from s2;
+
+insert into s2 select * from s1;
+
+select * from view;
+
+drop table s2;
+
+select * from v;
+
+// Creating a custom view
+
+create view east as select region as area, item as product from s1 where region = 'East'    
+
+create view v as select * from s1;
+
+select * from v;
+
+// Joins
+create external table trans1000 ( id int, account_id int, vendor_id int,  transtime string, city string, state string, amount double) row format delimited fields terminated by ',' stored as textfile location '/user/maria_dev/data/trans1000';
+
+load data inpath'/user/maria_dev/data/trans_1000.csv' into table trans1000;
+
+create external table vendors (id int, name string, city string, state string, category string, swipe_rate double) row format delimited fields terminated by ',' stored as textfile location '/user/maria_dev/data/vend';
+
+load data inpath'/user/maria_dev/data/vendors.csv' into table vendors;
+
+set hive.auto.convert.join=false;
+
+select trans1000.*,  vendors.* from trans1000 join vendors on (trans1000.vendor_id = vendors.id) limit 30;
+
+create view vend1 as select * from vendors where id < 5;
+	
+create view trans1 as select * from trans1000 where vendor_id > 2; 
+
+select id from vend1;
+
+select distinct vendor_id from trans1;
+
+select trans1.*,  vend1.* from trans1 join vend1 on (trans1.vendor_id = vend1.id);
+select trans1.*,  vend1.* from trans1 left outer join vend1 on (trans1.vendor_id = vend1.id);
+select trans1.*,  vend1.* from trans1 right outer join vend1 on (trans1.vendor_id = vend1.id);
+select trans1.*,  vend1.* from trans1 full outer join vend1 on (trans1.vendor_id = vend1.id);
