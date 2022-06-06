@@ -1,5 +1,6 @@
 ## Visa Bid Data SQL Repository
 
-This is currently in pre-release. Final text revisions and edits are pending. All code provided has been fully tested in the Nuvelab environment.
+This is the class repository for the labs for the SQL Hive 101 class starting June 6.
 
-Final fully proofed version release will be June 5.
+Additional labs and materials may be added as the class progresses.  Updates will be posted in this file.
+
