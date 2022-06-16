@@ -1,0 +1,27 @@
+CREATE  TABLE v1 (
+    id int,
+    name string,
+    city string,
+    state string ,
+    category string ,
+    swipe_rate double)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+stored as textfile;
+
+insert into v1 select * from vendors where id < 6;
+
+create view norm as select trans1000.*,v2.* from trans1000,v2 where trans1000.vendor_id = v2.id;
+create materialized view mat as select trans1000.*,vendors.* from trans1000,vendors where trans1000.vendor_id = vendors.id;
+
+select count(*), vendor_id from mat group by(vendor_id);
+select count(*), vendor_id from norm group by(vendor_id);
+
+insert overwrite table v1 select * from vendors where id > 5;
+
+select count(*), vendor_id from mat group by(vendor_id);
+select count(*), vendor_id from norm group by(vendor_id);
+
+
+alter materialized view mat rebuild;
+
+select count(*), vendor_id from mat group by(vendor_id);

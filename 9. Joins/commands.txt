@@ -74,5 +74,6 @@ set hive.auto.convert.join=false;
 select * from tb inner join vb on (tb.vendor_id = vb.id) limit 10;
 
 set hive.auto.convert.join=true;
+set hive.optimize.bucketmapjoin=true;
 
 select * from tb inner join vb on (tb.vendor_id = vb.id) limit 10;
