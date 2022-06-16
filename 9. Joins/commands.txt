@@ -1,0 +1,78 @@
+ 
+CREATE TABLE trans1000 (
+    id int, 
+    account_id int, 
+    vendor_id int, 
+    transtime string, 
+    city string, 
+    state string,
+    amount double)
+    ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+    stored as textfile;
+
+load data inpath'/user/maria_dev/data/trans_1000.csv' into table trans1000;
+
+
+CREATE  TABLE vendors (
+    id int,
+    name string,
+    city string,
+    state string ,
+    category string ,
+    swipe_rate double)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+stored as textfile;
+
+load data inpath'/user/maria_dev/data/vendors.csv' into table vendors;
+
+set hive.auto.convert.join=false;
+
+select trans1000.*,  vendors.* from trans1000 join vendors on (trans1000.vendor_id = vendors.id) limit 10;
+
+set hive.auto.convert.join=true;
+
+select trans1000.*,  vendors.* from trans1000 join vendors on (trans1000.vendor_id = vendors.id) limit 10;
+
+// Semi left join 
+
+ select * from trans1000 inner join vendors on (trans1000.vendor_id = vendors.id) limit 10;
+
+select * from trans1000 left semi join vendors on (trans1000.vendor_id = vendors.id) limit 10;
+
+// Bucket join
+
+CREATE TABLE tb (
+    id int, 
+    account_id int, 
+    vendor_id int, 
+    transtime string, 
+    city string, 
+    state string,
+    amount double)
+    clustered by (vendor_id) into 4 buckets
+    ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+    stored as textfile;
+
+insert into tb select * from trans1000;
+
+CREATE  TABLE vb (
+    id int,
+    name string,
+    city string,
+    state string ,
+    category string ,
+    swipe_rate double)
+    clustered by (id) into 2 buckets
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+stored as textfile;
+
+insert into vb select * from vendors;
+
+
+set hive.auto.convert.join=false;
+
+select * from tb inner join vb on (tb.vendor_id = vb.id) limit 10;
+
+set hive.auto.convert.join=true;
+
+select * from tb inner join vb on (tb.vendor_id = vb.id) limit 10;
