@@ -1,9 +1,6 @@
-## Visa Bid Data SQL Repository
+## Visa Big Data SQL Repository
 
-This is the class repository for the labs for the SQL Hive 101 class starting June 6.
+This is the class repository for the labs for the SQL Hive 101 class 
+This repository will be available until the end of Jan 2023
+Please fork or clone before then
 
-Additional labs and materials may be added as the class progresses.  Updates will be posted in this file.
-
-### June 16
-
-Labs 9 and 10 added 
